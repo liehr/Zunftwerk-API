@@ -1,4 +1,4 @@
-package de.tudl.playground.zunftwerkapi.model;
+package com.zunftwerk.app.zunftwerkapi.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -18,10 +18,14 @@ public class SubscriptionPlan {
     private Long id;
 
     private String name;           // e.g., "Freemium", "Base", "Pro"
-    private Double monthlyPrice;
-    private Double annualPrice;
-    private int includedUsers;
-    private Integer maxOrders;
+    // Decrypted to Double
+    private String monthlyPrice;
+    // Decrypted to Double
+    private String annualPrice;
+    // Decrypted to int
+    private String includedUsers;
+    // Decrypted to int
+    private String maxOrders;
 
     // This many-to-many defines the default/included modules for the plan.
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})

@@ -1,4 +1,4 @@
-package de.tudl.playground.zunftwerkapi.model;
+package com.zunftwerk.app.zunftwerkapi.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,7 +22,9 @@ public class Module {
     private Long id;
 
     private String moduleName;
-    private Double modulePrice;
+
+    // Decrypted to a Double
+    private String modulePrice;
 
     @ManyToMany(mappedBy = "modules")
     private Set<SubscriptionPlan> plans = new HashSet<>();

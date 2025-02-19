@@ -1,26 +1,26 @@
-package de.tudl.playground.zunftwerkapi.model;
+package com.zunftwerk.app.zunftwerkapi.model;
 
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Order {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Owning side: many orders can belong to one organization
+    // Owning side of the relationship
     @ManyToOne
     @JoinColumn(name = "organization_id")
     private Organization organization;
 
-    private String description;
-    private String status;
+    private String email;
+    private String password;
+    private String role;
 }
-

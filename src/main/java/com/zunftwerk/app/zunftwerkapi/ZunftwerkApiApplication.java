@@ -1,4 +1,4 @@
-package de.tudl.playground.zunftwerkapi;
+package com.zunftwerk.app.zunftwerkapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

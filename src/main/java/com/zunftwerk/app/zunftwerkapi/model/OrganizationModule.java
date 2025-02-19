@@ -1,4 +1,4 @@
-package de.tudl.playground.zunftwerkapi.model;
+package com.zunftwerk.app.zunftwerkapi.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,10 +28,13 @@ public class OrganizationModule {
     private Module module;
 
     // Additional fields for subscription details
-    private LocalDate startDate;
-    private LocalDate endDate;
+    // Decrypted to LocalDate
+    private String startDate;
+    // Decrypted to LocalDate
+    private String endDate;
 
     // Optional price override for this module purchase
-    private Double priceOverride;
+    // Decrypted to Double
+    private String priceOverride;
 }
 

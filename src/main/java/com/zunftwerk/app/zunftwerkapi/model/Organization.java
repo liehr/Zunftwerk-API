@@ -1,4 +1,4 @@
-package de.tudl.playground.zunftwerkapi.model;
+package com.zunftwerk.app.zunftwerkapi.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,8 +22,12 @@ public class Organization {
     private Long id;
 
     private String name;
-    private LocalDate subscriptionStartDate;
-    private LocalDate subscriptionEndDate;
+    // Decrypted to LocalDate
+    private String subscriptionStartDate;
+    // Decrypted to LocalDate
+    private String subscriptionEndDate;
+
+    // Decrypted to int
     private int additionalPurchasedUsers;
 
     @ManyToOne
