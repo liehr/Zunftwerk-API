@@ -1,9 +1,11 @@
 package com.zunftwerk.app.zunftwerkapi.service;
 
+import com.zunftwerk.app.zunftwerkapi.exception.ErrorInitializingJwtServiceException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.SneakyThrows;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,7 @@ public class JwtService {
 
     private final String secretKey;
 
+    @SneakyThrows
     public JwtService()
     {
         try
@@ -30,7 +33,7 @@ public class JwtService {
 
             secretKey = Base64.getEncoder().encodeToString(sk.getEncoded());
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            throw new ErrorInitializingJwtServiceException(e.getMessage());
         }
     }
 

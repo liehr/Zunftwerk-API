@@ -3,8 +3,6 @@ package com.zunftwerk.app.zunftwerkapi.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
-
 @Entity
 @Table(name = "organization_modules")
 @Data
