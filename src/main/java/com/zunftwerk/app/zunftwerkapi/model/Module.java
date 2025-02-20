@@ -1,10 +1,8 @@
 package com.zunftwerk.app.zunftwerkapi.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.EqualsAndHashCode;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,21 +13,25 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(exclude = {"plans", "organizationModules"})
 public class Module {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String moduleName;
 
-    // Decrypted to a Double
-    private String modulePrice;
+    @Column(nullable = false)
+    private Double modulePrice;
 
+    @Builder.Default
     @ManyToMany(mappedBy = "modules")
     private Set<SubscriptionPlan> plans = new HashSet<>();
 
     // Convenience methods for managing organization modules
+    @Builder.Default
     @OneToMany(mappedBy = "module", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrganizationModule> organizationModules = new HashSet<>();
 

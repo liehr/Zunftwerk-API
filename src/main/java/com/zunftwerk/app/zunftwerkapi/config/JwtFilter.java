@@ -1,7 +1,9 @@
 package com.zunftwerk.app.zunftwerkapi.config;
 
+import com.zunftwerk.app.zunftwerkapi.security.CustomAuthenticationToken;
 import com.zunftwerk.app.zunftwerkapi.service.JwtService;
 import com.zunftwerk.app.zunftwerkapi.service.MyUserDetailsService;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 @Slf4j
@@ -38,28 +41,39 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = null;
         String username = null;
 
-        if (authHeader != null && authHeader.startsWith("Bearer")) {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
             try {
                 token = authHeader.substring(7);
                 username = jwtService.extractUserName(token);
             } catch (Exception e) {
-                // Log a sleek error message instead of the full stack trace
                 log.error("Error extracting JWT username: {}", e.getMessage());
             }
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             try {
+                // Extrahiere zusätzliche Claims
+                Claims claims = jwtService.extractAllClaims(token);
+                Long organizationId = claims.get("organizationId", Long.class);
+                @SuppressWarnings("unchecked")
+                List<String> roles = claims.get("roles", List.class);
+                @SuppressWarnings("unchecked")
+                List<String> modules = claims.get("modules", List.class);
+
+                // Hole die UserDetails (ggf. kannst du diese erweitern, um zusätzliche Felder zu berücksichtigen)
                 UserDetails userDetails = context.getBean(MyUserDetailsService.class)
                         .loadUserByUsername(username);
+
                 if (jwtService.validateToken(token, userDetails)) {
-                    UsernamePasswordAuthenticationToken upaToken =
-                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                    upaToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(upaToken);
+                    // Erstelle ein benutzerdefiniertes Authentication-Objekt, das zusätzliche Informationen enthält
+                    CustomAuthenticationToken authToken = new CustomAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    authToken.setOrganizationId(organizationId);
+                    authToken.setRoles(roles);
+                    authToken.setModules(modules);
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             } catch (Exception e) {
-                // Log a sleek error message instead of the full stack trace
                 log.error("Error validating JWT token: {}", e.getMessage());
             }
         }

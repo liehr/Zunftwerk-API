@@ -3,12 +3,15 @@ package com.zunftwerk.app.zunftwerkapi.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "organization_modules")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(exclude = "organization")
 public class OrganizationModule {
 
     @Id
@@ -26,13 +29,10 @@ public class OrganizationModule {
     private Module module;
 
     // Additional fields for subscription details
-    // Decrypted to LocalDate
-    private String startDate;
-    // Decrypted to LocalDate
-    private String endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     // Optional price override for this module purchase
-    // Decrypted to Double
-    private String priceOverride;
+    private Double priceOverride;
 }
 

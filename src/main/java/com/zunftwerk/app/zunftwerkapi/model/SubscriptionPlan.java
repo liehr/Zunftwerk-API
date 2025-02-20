@@ -2,6 +2,7 @@ package com.zunftwerk.app.zunftwerkapi.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.EqualsAndHashCode;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,23 +12,28 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(exclude = "modules")
 public class SubscriptionPlan {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;           // e.g., "Freemium", "Base", "Pro"
-    // Decrypted to Double
-    private String monthlyPrice;
-    // Decrypted to Double
-    private String annualPrice;
-    // Decrypted to int
-    private String includedUsers;
-    // Decrypted to int
-    private String maxOrders;
+    @Column(nullable = false, unique = true)
+    private String name;  // e.g., "Freemium", "Base", "Pro"
 
-    // This many-to-many defines the default/included modules for the plan.
+    @Column(nullable = false)
+    private Double monthlyPrice;
+
+    @Column(nullable = false)
+    private Double annualPrice;
+
+    @Column(nullable = false)
+    private Integer includedUsers;
+
+    private Integer maxOrders;
+
+    @Builder.Default
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "plan_modules",

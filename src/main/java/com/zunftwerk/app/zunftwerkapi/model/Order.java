@@ -20,7 +20,10 @@ public class Order {
     @JoinColumn(name = "organization_id")
     private Organization organization;
 
+    @Column(nullable = false)
     private String description;
+
+    @Column(nullable = false)
     private String status;
 }
 

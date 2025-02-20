@@ -2,7 +2,7 @@ package com.zunftwerk.app.zunftwerkapi.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -21,25 +21,26 @@ public class Organization {
     private Long id;
 
     private String name;
-    // Decrypted to LocalDate
-    private String subscriptionStartDate;
-    // Decrypted to LocalDate
-    private String subscriptionEndDate;
 
-    // Decrypted to int
+    private LocalDate subscriptionStartDate;
+    private LocalDate subscriptionEndDate;
+
     private int additionalPurchasedUsers;
 
     @ManyToOne
     @JoinColumn(name = "subscription_plan_id")
     private SubscriptionPlan subscriptionPlan;
 
+    @Builder.Default
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<User> users = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders = new ArrayList<>();
 
     // A la carte purchased modules.
+    @Builder.Default
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrganizationModule> organizationModules = new HashSet<>();
 
@@ -49,8 +50,10 @@ public class Organization {
         if (subscriptionPlan != null) {
             effectiveModules.addAll(subscriptionPlan.getModules());
         }
-        for (OrganizationModule orgModule : organizationModules) {
-            effectiveModules.add(orgModule.getModule());
+        if (organizationModules != null) { // zusätzliche Absicherung
+            for (OrganizationModule orgModule : organizationModules) {
+                effectiveModules.add(orgModule.getModule());
+            }
         }
         return effectiveModules;
     }
@@ -66,4 +69,3 @@ public class Organization {
         orgModule.setOrganization(null);
     }
 }
-

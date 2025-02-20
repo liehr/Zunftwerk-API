@@ -20,7 +20,12 @@ public class User {
     @JoinColumn(name = "organization_id")
     private Organization organization;
 
+    @Column(unique = true, nullable = false)
     private String email;
+
+    @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
     private String role;
 }

@@ -1,23 +1,36 @@
 package com.zunftwerk.app.zunftwerkapi.model;
 
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 public class UserPrincipal implements UserDetails {
 
-    private final User user;
+    private final transient User user;
+    @Getter
+    private final Long organizationId;
+    @Getter
+    private final List<String> roles;
+    @Getter
+    private final List<String> modules;
 
-    public UserPrincipal(User user) {
+    public UserPrincipal(User user, Long organizationId, List<String> roles, List<String> modules) {
         this.user = user;
+        this.organizationId = organizationId;
+        this.roles = roles;
+        this.modules = modules;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority("USER"));
+        // Mappen der Rollen in GrantedAuthority-Objekte
+        return roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .toList();
     }
 
     @Override

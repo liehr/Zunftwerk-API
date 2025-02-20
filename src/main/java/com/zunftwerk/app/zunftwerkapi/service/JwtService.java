@@ -12,10 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 @Service
@@ -37,12 +34,14 @@ public class JwtService {
         }
     }
 
-    public String generateToken(String username, boolean isPremium)
+    public String generateToken(String username, Long organizationId, List<String> roles, List<String> modules)
     {
         Map<String, Object> claims = new HashMap<>();
 
         claims.put("username", username);
-        claims.put("isPremium", isPremium);
+        claims.put("organizationId", organizationId);
+        claims.put("roles", roles);
+        claims.put("modules", modules);
 
         return Jwts.builder()
                 .claims()
@@ -70,7 +69,7 @@ public class JwtService {
         return claimResolver.apply(claims);
     }
 
-    private Claims extractAllClaims(String token)
+    public Claims extractAllClaims(String token)
     {
         return Jwts.parser()
                 .verifyWith(getKey())
