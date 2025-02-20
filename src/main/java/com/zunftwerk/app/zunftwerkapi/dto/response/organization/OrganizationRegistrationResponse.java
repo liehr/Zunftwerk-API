@@ -5,6 +5,7 @@ public record OrganizationRegistrationResponse(
         String organizationName,
         String subscriptionPlanName,
         String token,
+        String refreshToken,
         String adminEmail
 ) {}
 

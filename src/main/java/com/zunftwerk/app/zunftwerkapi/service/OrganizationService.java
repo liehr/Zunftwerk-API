@@ -67,12 +67,14 @@ public class OrganizationService {
                 .map(Module::getModuleName)
                 .toList();
         String jwtToken = jwtService.generateToken(adminUser.getEmail(), organization.getId(), roles, modules);
+        String refreshToken = jwtService.generateRefreshToken(adminUser.getEmail());
 
         return new OrganizationRegistrationResponse(
                 organization.getId(),
                 organization.getName(),
                 freemiumPlan.getName(),
                 jwtToken,
+                refreshToken,
                 adminUser.getEmail()
         );
     }
