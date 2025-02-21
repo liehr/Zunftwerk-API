@@ -1,5 +1,7 @@
 package com.zunftwerk.app.zunftwerkapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
@@ -14,6 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Organization {
 
     @Id
@@ -21,10 +24,8 @@ public class Organization {
     private Long id;
 
     private String name;
-
     private LocalDate subscriptionStartDate;
     private LocalDate subscriptionEndDate;
-
     private int additionalPurchasedUsers;
 
     @ManyToOne
@@ -39,7 +40,6 @@ public class Organization {
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders = new ArrayList<>();
 
-    // A la carte purchased modules.
     @Builder.Default
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrganizationModule> organizationModules = new HashSet<>();
@@ -50,7 +50,7 @@ public class Organization {
         if (subscriptionPlan != null) {
             effectiveModules.addAll(subscriptionPlan.getModules());
         }
-        if (organizationModules != null) { // zusätzliche Absicherung
+        if (organizationModules != null) {
             for (OrganizationModule orgModule : organizationModules) {
                 effectiveModules.add(orgModule.getModule());
             }

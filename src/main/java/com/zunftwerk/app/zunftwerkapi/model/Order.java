@@ -1,5 +1,7 @@
 package com.zunftwerk.app.zunftwerkapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,13 +11,13 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Order {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Owning side: many orders can belong to one organization
+    // Many orders can belong to one organization.
     @ManyToOne
     @JoinColumn(name = "organization_id")
     private Organization organization;
@@ -26,4 +28,3 @@ public class Order {
     @Column(nullable = false)
     private String status;
 }
-

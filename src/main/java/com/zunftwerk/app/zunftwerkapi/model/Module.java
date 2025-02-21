@@ -1,9 +1,10 @@
 package com.zunftwerk.app.zunftwerkapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.EqualsAndHashCode;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,6 +15,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(exclude = {"plans", "organizationModules"})
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Module {
 
     @Id
@@ -30,7 +32,6 @@ public class Module {
     @ManyToMany(mappedBy = "modules")
     private Set<SubscriptionPlan> plans = new HashSet<>();
 
-    // Convenience methods for managing organization modules
     @Builder.Default
     @OneToMany(mappedBy = "module", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrganizationModule> organizationModules = new HashSet<>();

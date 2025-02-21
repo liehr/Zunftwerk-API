@@ -1,8 +1,10 @@
 package com.zunftwerk.app.zunftwerkapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
-
+import lombok.EqualsAndHashCode;
 import java.time.LocalDate;
 
 @Entity
@@ -12,27 +14,22 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(exclude = "organization")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class OrganizationModule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // The organization that purchased the module
     @ManyToOne
     @JoinColumn(name = "organization_id", nullable = false)
     private Organization organization;
 
-    // The purchased module
     @ManyToOne
     @JoinColumn(name = "module_id", nullable = false)
     private Module module;
 
-    // Additional fields for subscription details
     private LocalDate startDate;
     private LocalDate endDate;
-
-    // Optional price override for this module purchase
     private Double priceOverride;
 }
-
